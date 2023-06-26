@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use TimeService;
 
 class TimeController extends Controller
 {
@@ -19,6 +21,10 @@ class TimeController extends Controller
             $errors = $validator->errors();
             return response()->json(['errors' => $errors], 420);
         }
+
+        $timeService = new \App\Services\TimeService();
+        $res = $timeService->breakTime();
+
         return response()->json(200);
     }
 }
