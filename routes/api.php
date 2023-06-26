@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/breakTime', [\App\Http\Controllers\TimeController::class, 'breakTime']);
+Route::get('/breakTime', [\App\Http\Controllers\TimeController::class, 'searchBreakTime']);
 
 
 

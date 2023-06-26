@@ -31,9 +31,36 @@ class TimeController extends Controller
 
         return response()->json(["message"=>"Key in following json is unit name and value is its weightage","data" => $res["body"]],200);
     }
+
+    public function searchBreakTime(Request $request)
+    {
+
+        $inputs = [
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
+        ];
+
+
+        $validator = validateSearchInput($inputs);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['errors' => $errors], 420);
+        }
+
+        $timeService = new \App\Services\TimeService();
+        return $timeService->getBreakTime($request->input('start_time'), $request->input('end_time'));
+
+    }
 }
 
 
+function validateSearchInput(array $data)
+{
+    return \Illuminate\Support\Facades\Validator::make($data, [
+        'start_time' => 'required|date_format:Y-m-d H:i:s',
+        'end_time' => 'required|date_format:Y-m-d H:i:s',
+    ]);
+}
 function validateInput(array $data)
 {
     return \Illuminate\Support\Facades\Validator::make($data, [

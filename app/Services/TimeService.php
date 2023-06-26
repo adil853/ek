@@ -81,8 +81,8 @@ class TimeService
         }
 
         $time = Time::create([
-            'start_time' => $startTime,
-            'end_time' => $endTime,
+            'start_time' => $data["start_time"],
+            'end_time' => $data["end_time"],
             'time_expressions' => $response,
         ]);
 
@@ -91,6 +91,11 @@ class TimeService
             'message' => 'success',
             'body' => $response
         ];
+    }
+
+    public function getBreakTime($startTime, $endTime)
+    {
+        return Time::where("start_time", '=', $startTime)->where("end_time", '=', $endTime)->get();
     }
 }
 
