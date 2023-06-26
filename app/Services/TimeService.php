@@ -70,7 +70,7 @@ class TimeService
                 if (($totalSeconds / ($secondsToDividedBy * $quantity)) >= 1) {
                     $totalTime = $totalSeconds / ($secondsToDividedBy * $quantity);
                     $expressionQuantity = intval($totalTime);
-                    $totalSeconds = ($totalTime - $expressionQuantity) * $secondsToDividedBy;
+                    $totalSeconds = ($totalTime - $expressionQuantity) * $secondsToDividedBy * $quantity;
                     $response[$quantity . $unit] = $expressionQuantity;
                     $alreadyValidExpressionExtracted[$unit] = true;
                 } else {
