@@ -25,8 +25,11 @@ class TimeController extends Controller
 
         $timeService = new \App\Services\TimeService();
         $res = $timeService->breakTime($inputs);
+        if ($res["error"]) {
+            return response()->json(['errors' => $res["message"], 'sampleRequest' => ['start_time'=>'2020-01-01 00:00:00', 'end_time'=>'2020-03-15 00:00:10', 'time_expressions'=>["2m","1d", "2h", "3s"]]], 420);
+        }
 
-        return response()->json(200);
+        return response()->json(["message"=>"Key in following json is unit name and value is its weightage","data" => $res["body"]],200);
     }
 }
 

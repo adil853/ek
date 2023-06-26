@@ -5,40 +5,23 @@ namespace App\Services;
 use Carbon\Carbon;
 use function PHPUnit\Framework\returnArgument;
 
+const SecondsInMonth = 2592000;
+const SecondsInDay = 86400;
+const SecondsInHour = 3600;
+const SecondsInMin = 60;
+const SecondsInSecond = 1;
+
 class TimeService
 {
 
-
-    public function breakTime(array $data): string
+    public function breakTime(array $data): array
     {
-        $startTime = $data["start_time"];
-        $endTime = $data["end_time"];
         $timeExpressions = $data["time_expressions"];
         $sortedExpressionTimeStrings = sortTimeStrings($timeExpressions);
-
-
-
-
-        $time1 = strtotime($startTime);
-        $time2 = strtotime($endTime);
-
-
-
-        $anc = getExactSecondsBetweenDates($startTime, $endTime);
-        echo $anc;
-        echo "       next";
-
-
-        $totalSeconds = $time2 - $time1;
-        echo $totalSeconds;
-
-
-
-        $secondsInMonth = 2592000;
-        $secondsInDay = 86400;
-        $secondsInHour = 3600;
-        $secondsInMin = 60;
-        $secondsInSecond = 1;
+        $response = [];
+        $startTime = strtotime($data["start_time"]);
+        $endTime = strtotime($data["end_time"]);
+        $totalSeconds = $endTime - $startTime;
 
         $alreadyValidExpressionExtracted["m"] = false;
         $alreadyValidExpressionExtracted["d"] = false;
@@ -47,65 +30,61 @@ class TimeService
         $alreadyValidExpressionExtracted["s"] = false;
 
         $count = 0;
-
         while ($count < count($sortedExpressionTimeStrings)) {
             $timeExpression = $sortedExpressionTimeStrings[$count];
             preg_match('/^(\d+)([a-zA-Z]+)$/', $timeExpression, $match);
             $quantity = $match[1];
             $unit = $match[2];
+            echo  $alreadyValidExpressionExtracted[$unit];
             if ($alreadyValidExpressionExtracted[$unit]) {
-                $count++;
-                continue;
+                return [
+                    'error' => true,
+                    'message' => 'There can be only one valid expression of each type at a time. i.e. if expressions array contains 2m, 1m and a valid 2m is already found then error will be thrown as 1m will become invalid',
+                    'body' => $unit
+                ];
             }
-
             $secondsToDividedBy = 0;
-
             switch ($unit) {
                 case "m" :
-                    $secondsToDividedBy = $secondsInMonth;
+                    $secondsToDividedBy = SecondsInMonth;
                     break;
                 case "d" :
-                    $secondsToDividedBy = $secondsInDay;
+                    $secondsToDividedBy = SecondsInDay;
                     break;
                 case "h" :
-                    $secondsToDividedBy = $secondsInHour;
+                    $secondsToDividedBy = SecondsInHour;
                     break;
                 case "i" :
-                    $secondsToDividedBy = $secondsInMin;
+                    $secondsToDividedBy = SecondsInMin;
                     break;
                 case "s" :
-                    $secondsToDividedBy = $secondsInSecond;
+                    $secondsToDividedBy = SecondsInSecond;
                     break;
             }
-
             if ($count == count($sortedExpressionTimeStrings) - 1) {
-
                 if ($secondsToDividedBy > 0) {
                     $lastValue = $totalSeconds / ($secondsToDividedBy * $quantity);
-                    echo $lastValue . " unit of " . $quantity . " " . $unit . "___this is last one___";
+                    $response[$quantity . $unit] = $lastValue;
                 }
-
             } else {
-
                 if (($totalSeconds / ($secondsToDividedBy * $quantity)) >= 1) {
                     $totalTime = $totalSeconds / ($secondsToDividedBy * $quantity);
                     $expressionQuantity = intval($totalTime);
                     $totalSeconds = ($totalTime - $expressionQuantity) * $secondsToDividedBy;
-                    echo $expressionQuantity . "unit of " . $quantity . " " . $unit;
+                    $response[$quantity . $unit] = $expressionQuantity;
                     $alreadyValidExpressionExtracted[$unit] = true;
                 } else {
-                    echo "0 unit of " . $quantity . " " . $unit;
+                    $response[$quantity . $unit] = 0;
                 }
             }
-
-
             $count++;
         }
-
-
-        return "breakTime from service is called";
+        return [
+            'error' => false,
+            'message' => 'success',
+            'body' => $response
+        ];
     }
-
 }
 
 
@@ -118,11 +97,9 @@ function sortTimeStrings(array $timeStrings): array
         'i' => [],
         's' => [],
     ];
-
     foreach ($timeStrings as $timeString) {
         $unit = preg_replace('/\d+/', '', $timeString); // Extract the unit (m, d, h, i, s)
         $value = intval(preg_replace('/[^\d]/', '', $timeString)); // Extract the integer value (or default to 1 if no integer is attached)
-
         switch ($unit) {
             case 'm':
                 $result['m'][] = ($value !== 0) ? $timeString : '1m';
@@ -143,7 +120,6 @@ function sortTimeStrings(array $timeStrings): array
                 break;
         }
     }
-
     foreach ($result as &$array) {
         usort($array, function ($a, $b) {
             $aValue = intval(preg_replace('/[^\d]/', '', $a)); // Extract the integer value
@@ -152,18 +128,6 @@ function sortTimeStrings(array $timeStrings): array
             return $bValue - $aValue; // Sort in descending order
         });
     }
-
     return array_merge($result["m"], $result["d"], $result["h"], $result["i"], $result["s"]);
-
-
 }
 
-
-function getExactSecondsBetweenDates($startDate, $endDate): float|int
-{
-    $start = Carbon::parse($startDate);
-    $end = Carbon::parse($endDate);
-    $monthsDiff = $start->diffInMonths($end);
-    $remainingSeconds = $end->diffInSeconds($start->copy()->addMonths($monthsDiff));
-    return ($monthsDiff * 30 * 24 * 60 * 60) + $remainingSeconds;
-}
