@@ -57,52 +57,36 @@ class TimeService
                 $count++;
                 continue;
             }
+
+            $secondsToDividedBy = 0;
+
+            switch ($unit) {
+                case "m" :
+                    $secondsToDividedBy = $secondsInMonth;
+                    break;
+                case "d" :
+                    $secondsToDividedBy = $secondsInDay;
+                    break;
+                case "h" :
+                    $secondsToDividedBy = $secondsInHour;
+                    break;
+                case "i" :
+                    $secondsToDividedBy = $secondsInMin;
+                    break;
+                case "s" :
+                    $secondsToDividedBy = $secondsInSecond;
+                    break;
+            }
+
             if ($count == count($sortedExpressionTimeStrings) - 1) {
 
-                $secondsToDividedBy = 0;
-                switch ($unit) {
-                    case "m" :
-                        $secondsToDividedBy = $secondsInMonth;
-                        break;
-                    case "d" :
-                        $secondsToDividedBy = $secondsInDay;
-
-                        break;
-                    case "h" :
-                        $secondsToDividedBy = $secondsInHour;
-                        break;
-                    case "i" :
-                        $secondsToDividedBy = $secondsInMin;
-                        break;
-                    case "s" :
-                        $secondsToDividedBy = $secondsInSecond;
-                        break;
-                }
                 if ($secondsToDividedBy > 0) {
                     $lastValue = $totalSeconds / ($secondsToDividedBy * $quantity);
                     echo $lastValue . " unit of " . $quantity . " " . $unit . "___this is last one___";
                 }
 
             } else {
-                $secondsToDividedBy = 0;
 
-                switch ($unit) {
-                    case "m" :
-                        $secondsToDividedBy = $secondsInMonth;
-                        break;
-                    case "d" :
-                        $secondsToDividedBy = $secondsInDay;
-                        break;
-                    case "h" :
-                        $secondsToDividedBy = $secondsInHour;
-                        break;
-                    case "i" :
-                        $secondsToDividedBy = $secondsInMin;
-                        break;
-                    case "s" :
-                        $secondsToDividedBy = $secondsInSecond;
-                        break;
-                }
                 if (($totalSeconds / ($secondsToDividedBy * $quantity)) >= 1) {
                     $totalTime = $totalSeconds / ($secondsToDividedBy * $quantity);
                     $expressionQuantity = intval($totalTime);
