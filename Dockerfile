@@ -27,3 +27,10 @@ EXPOSE 8000
 
 # Run the application
 CMD php artisan serve --host=0.0.0.0 --port=8000
+
+
+COPY entrypoint.sh /var/www/html/entrypoint.sh
+
+CMD ["/bin/sh", "/var/www/html/entrypoint.sh"]
+
+
