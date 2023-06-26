@@ -11,8 +11,26 @@ class TimeService
         $startTime = $data["start_time"];
         $endTime = $data["end_time"];
         $timeExpressions = $data["time_expressions"];
+        $sortedExpressionTimeStrings = sortTimeStrings($timeExpressions);
 
-        print_r(separateTimeStrings($timeExpressions));
+
+
+        $alreadyValidExpressionExtracted["m"] = false;
+        $alreadyValidExpressionExtracted["d"] = false;
+        $alreadyValidExpressionExtracted["h"] = false;
+        $alreadyValidExpressionExtracted["i"] = false;
+        $alreadyValidExpressionExtracted["s"] = false;
+
+        $count = 0;
+
+        while ($count < count($sortedExpressionTimeStrings)) {
+            echo $sortedExpressionTimeStrings[$count];
+
+            $count++;
+        }
+
+
+
 
 
         return "breakTime from service is called";
@@ -21,7 +39,7 @@ class TimeService
 }
 
 
-function separateTimeStrings(array $timeStrings): array
+function sortTimeStrings(array $timeStrings): array
 {
     $result = [
         'm' => [],
@@ -65,7 +83,10 @@ function separateTimeStrings(array $timeStrings): array
         });
     }
 
-    return $result;
+    return array_merge($result["m"], $result["d"], $result["h"], $result["i"], $result["s"]);
+
+
+
 }
 
 
