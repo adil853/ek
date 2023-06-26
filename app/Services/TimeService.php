@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Time;
 use Carbon\Carbon;
 use function PHPUnit\Framework\returnArgument;
 
@@ -79,6 +80,13 @@ class TimeService
             }
             $count++;
         }
+
+        $time = Time::create([
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'time_expressions' => $response,
+        ]);
+
         return [
             'error' => false,
             'message' => 'success',
