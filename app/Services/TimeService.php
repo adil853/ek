@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+use function PHPUnit\Framework\returnArgument;
+
 class TimeService
 {
 
@@ -13,10 +16,23 @@ class TimeService
         $timeExpressions = $data["time_expressions"];
         $sortedExpressionTimeStrings = sortTimeStrings($timeExpressions);
 
+
+
+
         $time1 = strtotime($startTime);
         $time2 = strtotime($endTime);
 
+
+
+        $anc = getExactSecondsBetweenDates($startTime, $endTime);
+        echo $anc;
+        echo "       next";
+
+
         $totalSeconds = $time2 - $time1;
+        echo $totalSeconds;
+
+
 
         $secondsInMonth = 2592000;
         $secondsInDay = 86400;
@@ -68,62 +84,33 @@ class TimeService
                 }
 
             } else {
+                $secondsToDividedBy = 0;
+
                 switch ($unit) {
                     case "m" :
-                        if (($totalSeconds / ($secondsInMonth * $quantity)) > 1) {
-                            $totalTimeInMonth = $totalSeconds / ($secondsInMonth * $quantity);
-                            $expressionQuantity = intval($totalTimeInMonth);
-                            $totalSeconds = ($totalTimeInMonth - $expressionQuantity) * $secondsInMonth;
-                            echo $expressionQuantity . "unit of " . $quantity . "m___";
-                            $alreadyValidExpressionExtracted["m"] = true;
-                        } else {
-                            echo "0 unit of " . $quantity . "m___";
-                        }
+                        $secondsToDividedBy = $secondsInMonth;
                         break;
                     case "d" :
-                        if (($totalSeconds / ($secondsInDay * $quantity)) > 1) {
-                            $totalTimeInDay = $totalSeconds / ($secondsInDay * $quantity);
-                            $expressionQuantity = intval($totalTimeInDay);
-                            $totalSeconds = ($totalTimeInDay - $expressionQuantity) * $secondsInDay;
-                            echo $expressionQuantity . "unit of " . $quantity . "d___";
-                            $alreadyValidExpressionExtracted["d"] = true;
-                        } else {
-                            echo "0 unit of " . $quantity . "d___";
-                        }
+                        $secondsToDividedBy = $secondsInDay;
                         break;
                     case "h" :
-                        if (($totalSeconds / ($secondsInHour * $quantity)) > 1) {
-                            $totalTimeInHour = $totalSeconds / ($secondsInHour * $quantity);
-                            $expressionQuantity = intval($totalTimeInHour);
-                            $totalSeconds = ($totalTimeInHour - $expressionQuantity) * $secondsInHour;
-                            echo $expressionQuantity . "unit of " . $quantity . "h___";
-                            $alreadyValidExpressionExtracted["h"] = true;
-                        } else {
-                            echo "0 unit of " . $quantity . "h___";
-                        }
+                        $secondsToDividedBy = $secondsInHour;
                         break;
                     case "i" :
-                        if (($totalSeconds / ($secondsInMin * $quantity)) > 1) {
-                            $totalTimeInMin = $totalSeconds / ($secondsInMin * $quantity);
-                            $expressionQuantity = intval($totalTimeInMin);
-                            $totalSeconds = ($totalTimeInMin - $expressionQuantity) * $secondsInMin;
-                            echo $expressionQuantity . "unit of " . $quantity . "i___";
-                            $alreadyValidExpressionExtracted["i"] = true;
-                        } else {
-                            echo "0 unit of " . $quantity . "i___";
-                        }
+                        $secondsToDividedBy = $secondsInMin;
                         break;
                     case "s" :
-                        if (($totalSeconds / ($secondsInSecond * $quantity)) > 1) {
-                            $totalTimeInSecond = $totalSeconds / ($secondsInSecond * $quantity);
-                            $expressionQuantity = intval($totalTimeInSecond);
-                            $totalSeconds = ($totalTimeInSecond - $expressionQuantity) * $secondsInSecond;
-                            echo $expressionQuantity . "unit of " . $quantity . "i___";
-                            $alreadyValidExpressionExtracted["i"] = true;
-                        } else {
-                            echo "0 unit of " . $quantity . "i___";
-                        }
+                        $secondsToDividedBy = $secondsInSecond;
                         break;
+                }
+                if (($totalSeconds / ($secondsToDividedBy * $quantity)) >= 1) {
+                    $totalTime = $totalSeconds / ($secondsToDividedBy * $quantity);
+                    $expressionQuantity = intval($totalTime);
+                    $totalSeconds = ($totalTime - $expressionQuantity) * $secondsToDividedBy;
+                    echo $expressionQuantity . "unit of " . $quantity . " " . $unit;
+                    $alreadyValidExpressionExtracted[$unit] = true;
+                } else {
+                    echo "0 unit of " . $quantity . " " . $unit;
                 }
             }
 
@@ -188,4 +175,11 @@ function sortTimeStrings(array $timeStrings): array
 }
 
 
-
+function getExactSecondsBetweenDates($startDate, $endDate): float|int
+{
+    $start = Carbon::parse($startDate);
+    $end = Carbon::parse($endDate);
+    $monthsDiff = $start->diffInMonths($end);
+    $remainingSeconds = $end->diffInSeconds($start->copy()->addMonths($monthsDiff));
+    return ($monthsDiff * 30 * 24 * 60 * 60) + $remainingSeconds;
+}
