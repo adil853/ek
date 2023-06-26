@@ -13,7 +13,7 @@ class TimeController extends Controller
         $inputs = [
             'start_time' => $request->input('start_time'),
             'end_time' => $request->input('end_time'),
-            'strings' => $request->input('time_expressions')
+            'time_expressions' => $request->input('time_expressions')
         ];
 
         $validator = validateInput($inputs);
@@ -22,8 +22,9 @@ class TimeController extends Controller
             return response()->json(['errors' => $errors], 420);
         }
 
+
         $timeService = new \App\Services\TimeService();
-        $res = $timeService->breakTime();
+        $res = $timeService->breakTime($inputs);
 
         return response()->json(200);
     }
@@ -35,7 +36,8 @@ function validateInput(array $data)
     return \Illuminate\Support\Facades\Validator::make($data, [
         'start_time' => 'required|date_format:Y-m-d H:i:s',
         'end_time' => 'required|date_format:Y-m-d H:i:s',
-        'strings' => [
+        'time_expressions.*' => ['distinct'],
+        'time_expressions' => [
             'required',
             'array',
             function ($attribute, $value, $fail) {
@@ -49,3 +51,4 @@ function validateInput(array $data)
         ],
     ]);
 }
+
