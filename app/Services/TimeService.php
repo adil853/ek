@@ -36,7 +36,6 @@ class TimeService
             preg_match('/^(\d+)([a-zA-Z]+)$/', $timeExpression, $match);
             $quantity = $match[1];
             $unit = $match[2];
-            echo  $alreadyValidExpressionExtracted[$unit];
             if ($alreadyValidExpressionExtracted[$unit]) {
                 return [
                     'error' => true,
@@ -64,13 +63,13 @@ class TimeService
             }
             if ($count == count($sortedExpressionTimeStrings) - 1) {
                 if ($secondsToDividedBy > 0) {
-                    $lastValue = $totalSeconds / ($secondsToDividedBy * $quantity);
+                    $lastValue = number_format($totalSeconds / ($secondsToDividedBy * $quantity),2);
                     $response[$quantity . $unit] = $lastValue;
                 }
             } else {
                 if (($totalSeconds / ($secondsToDividedBy * $quantity)) >= 1) {
                     $totalTime = $totalSeconds / ($secondsToDividedBy * $quantity);
-                    $expressionQuantity = intval($totalTime);
+                    $expressionQuantity = number_format(intval($totalTime),2);
                     $totalSeconds = ($totalTime - $expressionQuantity) * $secondsToDividedBy * $quantity;
                     $response[$quantity . $unit] = $expressionQuantity;
                     $alreadyValidExpressionExtracted[$unit] = true;
