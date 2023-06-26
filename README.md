@@ -8,6 +8,7 @@ Requirements
 - PHP 8.2.7
 - Laravel Framework 10.13.5
 - Composer version 2.5.8 2023-06-09 17:13:21
+- sqlite has been used as database
 
 Purpose
     This is a simple project based on Laravel. It simply exposed two end point.
