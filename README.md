@@ -106,5 +106,35 @@ This project exposes two end points only
         }
         }
 
+## Journal
+As this programs logic can be bit trickier then it seems to be but following is the way
+it has been resolved. User will pass two timestamps and an expressions of time literals
+i.e.
+
+    {
+    "start_time":"2020-01-05 12:00:01",
+    "end_time":"2020-03-14 00:00:11",
+    "time_expressions":["2m","1d", "2h", "3s"]
+    }
+
+First of all we do basic validations of expected types and don't allow any duplicate value 
+in time_expressions. Then time expressions are sorted in descending order. Then we start 
+extracting the time literal according to required time expressions. i.e. 
+
+if difference in seconds in both time is assume 6000000, and assume one month contains
+2592000 and we are looking for 2m expression we will apply following formula
+
+        6000000/(2592000*2) = 1.1574
+        as 1.1574 >= 1
+        so its 1 unit of 2m and now remaing time is
+        (1.1574-1)*2592000*2 = 815999.99
+        now 815999.99 is the time remaing for next expressions after month
+        we will iterate through all experrsions and keep apply this fromula.
+        and this will give us our answer
+
+# Note: Please note I have assumed that each month consists of 30 days regardless of actual calender as mentioned in assigment.
+
+
+
 
 
