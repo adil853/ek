@@ -2,13 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\UseCases\TimeUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use TimeService;
 
 class TimeController extends Controller
 {
-    public function breakTime(Request $request)
+
+    private TimeUseCase $timeUseCase;
+
+    public function __construct(TimeUseCase $timeUseCase)
+    {
+        $this->timeUseCase = $timeUseCase;
+    }
+
+    public function breakTime(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $inputs = [
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
+            'time_expressions' => $request->input('time_expressions')
+        ];
+
+        return $this->timeUseCase->execute($inputs);
+    }
+
+
+
+
+
+
+    public function breakTimeOld(Request $request)
     {
         $inputs = [
             'start_time' => $request->input('start_time'),
