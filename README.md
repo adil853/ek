@@ -57,7 +57,7 @@ using exposed endpoint.
 
 This project exposes two end points only
 - localhost:12000/api/breakTime (Post)
-  - sample curl request is attached
+  - sample curl request is attached \
     curl --location 'localhost:12000/api/breakTime' \
     --header 'Content-Type: application/json' \
     --data '{
@@ -92,7 +92,7 @@ This project exposes two end points only
         }
         }
 - localhost:12000/api/searchBreakTime (Post)
-  - sample curl request is attached
+  - sample curl request is attached \
     curl --location 'localhost:12000/api/searchBreakTime' \
     --header 'Content-Type: application/json' \
     --data '{
