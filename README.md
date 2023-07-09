@@ -5,6 +5,8 @@
 ## About Project
 
 Requirements
+
+- Docker dekstop app 4.11.0 (83626) (you need this on your machine as dev if you are planning to run this via docker command)
 - PHP 8.2.7
 - Laravel Framework 10.13.5
 - Composer version 2.5.8 2023-06-09 17:13:21
@@ -24,7 +26,9 @@ This project can be run by two ways.
 - Dockerized
 - Local
 
-### Dockerized
+### Dockerized (Suggested way to use)
+
+Note: It is assumed that you have installed a valid docker dekstop app or some other tool which helps running docker on local machine.
 
 To run this project on docker, you simply need docker installed on your machine
 and run following command
@@ -39,7 +43,8 @@ using exposed endpoint.
 
 - Navigate to project directory
 - Run "composer install"
-- Run "cp .env.example .env" (replace DB_DATABASE with absolute path of your sqlite db)
+- Run "cp .env.example .env"
+- Replace DB_DATABASE with absolute path of your sqlite db in .env file i.e. (/var/www/html/database/database.sqlite) (suggested way) or provide complete mysql connection of your local machine you are running app on
 - Run "php artisan key:generate"
 - Run "php artisan migrate"
 - Run "php artisan serve --port=12000"
@@ -50,6 +55,7 @@ using exposed endpoint.
 
 This project exposes two end points only
 - localhost:12000/api/breakTime (Post)
+  - Header must have Content-Type:application/json
   - It expects json as request body with following structure
     - {
       "start_time":"2020-01-05 12:00:01",
@@ -75,7 +81,8 @@ This project exposes two end points only
         ]
         }
         }
-- localhost:12000/api/breakTime (Get)
+- localhost:12000/api/searchBreakTime (Post)
+  - Header must have Content-Type:application/json
   - It expects json as request body with following structure
   - {
     "start_time":"2020-01-05 12:00:01",
