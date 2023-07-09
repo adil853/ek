@@ -57,6 +57,14 @@ using exposed endpoint.
 
 This project exposes two end points only
 - localhost:12000/api/breakTime (Post)
+  - sample curl request is attached
+    curl --location 'localhost:13000/api/breakTime' \
+    --header 'Content-Type: application/json' \
+    --data '{
+    "start_time":"2020-03-12 00:10:22",
+    "end_time":"2020-03-16 00:11:01",
+    "time_expressions":["2m","1d", "2h", "3s"]
+    }'
   - Header must have Content-Type:application/json
   - It expects json as request body with following structure
     - {
@@ -84,6 +92,13 @@ This project exposes two end points only
         }
         }
 - localhost:12000/api/searchBreakTime (Post)
+  - sample curl request is attached
+    curl --location 'localhost:13000/api/searchBreakTime' \
+    --header 'Content-Type: application/json' \
+    --data '{
+    "start_time":"2020-03-12 00:10:22",
+    "end_time":"2020-03-16 00:11:01"
+    }'
   - Header must have Content-Type:application/json
   - It expects json as request body with following structure
   - {
