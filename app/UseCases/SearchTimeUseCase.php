@@ -2,18 +2,19 @@
 
 namespace App\UseCases;
 
+use App\Domain\Repositories\TimeRepositoryInterface;
 use App\Domain\Services\TimeValidator;
 use App\Infrastructure\Persistence\TimeRepository;
 
 class SearchTimeUseCase
 {
     private TimeValidator $validator;
-    private TimeRepository $timeRepository;
+    private TimeRepositoryInterface $timeRepositoryInterface;
 
     public function __construct(TimeValidator $validator, TimeRepository $timeRepository,)
     {
         $this->validator = $validator;
-        $this->timeRepository = $timeRepository;
+        $this->timeRepositoryInterface = $timeRepository;
 
     }
 
@@ -31,7 +32,7 @@ class SearchTimeUseCase
         ];
 
 
-        $response = $this->timeRepository->findWhere($criteria);
+        $response = $this->timeRepositoryInterface->findWhere($criteria);
         return response()->json(["data" => $response], 200);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\UseCases;
 
+use App\Domain\Repositories\TimeRepositoryInterface;
 use App\Infrastructure\Persistence\TimeRepository;
 use App\Models\Time;
 use App\Models\User;
@@ -11,14 +12,14 @@ use App\Services\TimeService;
 class TimeUseCase
 {
     private TimeValidator $validator;
-    private TimeRepository $timeRepository;
+    private TimeRepositoryInterface $timeRepositoryInterface;
 
     private TimeService $timeService;
 
     public function __construct(TimeValidator $validator, TimeRepository $timeRepository, TimeService $timeService)
     {
         $this->validator = $validator;
-        $this->timeRepository = $timeRepository;
+        $this->timeRepositoryInterface = $timeRepository;
         $this->timeService = $timeService;
     }
 
@@ -35,7 +36,7 @@ class TimeUseCase
             return $this->sampleRequest($res);
         }
         $time = new Time(["start_time" => $input["start_time"], "end_time" => $input["end_time"], "time_expressions" => $res["body"]]);
-        $this->timeRepository->save($time);
+        $this->timeRepositoryInterface->save($time);
         return $this->response($res);
     }
 
