@@ -80,12 +80,6 @@ class TimeService
             $count++;
         }
 
-        $time = Time::create([
-            'start_time' => $data["start_time"],
-            'end_time' => $data["end_time"],
-            'time_expressions' => $response,
-        ]);
-
         return [
             'error' => false,
             'message' => 'success',
