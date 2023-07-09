@@ -7,7 +7,6 @@ services:
         ports:
             - 12000:12000
         volumes:
-            - .:/var/www/html
             - .env.docker:/var/www/html/.env
         environment:
             - DB_CONNECTION=sqlite
