@@ -11,4 +11,10 @@ class TimeRepository implements TimeRepositoryInterface
     {
         $time->save();
     }
+
+    public function findWhere(array $criteria)
+    {
+        return Time::where($criteria)->get();
+    }
+
 }

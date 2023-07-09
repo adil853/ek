@@ -8,4 +8,6 @@ use App\Models\Time;
 interface TimeRepositoryInterface
 {
     public function save(Time $time);
+
+    public function findWhere(array $criteria);
 }

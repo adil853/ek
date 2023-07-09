@@ -16,6 +16,15 @@ class TimeValidator
         return null;
     }
 
+    public function validateSearchTime($inputs): bool|\Illuminate\Support\MessageBag|null
+    {
+        $validator = $this->validateSearchTimeInput($inputs);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        return null;
+    }
+
     function validateInputNew(array $data): \Illuminate\Validation\Validator
     {
         return \Illuminate\Support\Facades\Validator::make($data, [
@@ -34,6 +43,14 @@ class TimeValidator
                     }
                 },
             ],
+        ]);
+    }
+
+    function validateSearchTimeInput(array $data): \Illuminate\Validation\Validator
+    {
+        return \Illuminate\Support\Facades\Validator::make($data, [
+            'start_time' => 'required|date_format:Y-m-d H:i:s',
+            'end_time' => 'required|date_format:Y-m-d H:i:s',
         ]);
     }
 }

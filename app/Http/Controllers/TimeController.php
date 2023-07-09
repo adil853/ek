@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\UseCases\TimeUseCase;
+use App\UseCases;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use TimeService;
 
 class TimeController extends Controller
 {
 
-    private TimeUseCase $timeUseCase;
+    private UseCases\TimeUseCase $timeUseCase;
+    private UseCases\SearchTimeUseCase $searchBreakTime;
 
-    public function __construct(TimeUseCase $timeUseCase)
+    public function __construct(UseCases\TimeUseCase $timeUseCase, UseCases\SearchTimeUseCase $searchBreakTime)
     {
         $this->timeUseCase = $timeUseCase;
+        $this->searchBreakTime = $searchBreakTime;
     }
 
     public function breakTime(Request $request): \Illuminate\Http\JsonResponse
@@ -59,11 +60,14 @@ class TimeController extends Controller
 
     public function searchBreakTime(Request $request)
     {
-
         $inputs = [
             'start_time' => $request->input('start_time'),
             'end_time' => $request->input('end_time'),
         ];
+
+        return $this->searchBreakTime->execute($inputs);
+
+
 
 
         $validator = validateSearchInput($inputs);

@@ -34,7 +34,7 @@ class TimeUseCase
         if ($res["error"]) {
             return $this->sampleRequest($res);
         }
-        $time = new Time(["start_time" => "2020-03-14 00:00:00", "end_time" => "2020-03-16 00:11:01", "time_expressions" => $res["body"]]);
+        $time = new Time(["start_time" => $input["start_time"], "end_time" => $input["end_time"], "time_expressions" => $res["body"]]);
         $this->timeRepository->save($time);
         return $this->response($res);
     }
