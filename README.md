@@ -33,6 +33,8 @@ Note: It is assumed that you have installed a valid docker dekstop app or some o
 To run this project on docker, you simply need docker installed on your machine
 and run following command
 
+    go into root directory of project
+
     docker-compose up --build --force-recreate
 
 This will start serving the project on localhost:12000. As a dev you don't need to get
@@ -41,7 +43,7 @@ using exposed endpoint.
 
 ### Local
 
-- Navigate to project directory
+- Navigate to project root directory
 - Run "composer install"
 - Run "cp .env.example .env"
 - Replace DB_DATABASE with absolute path of your sqlite db in .env file i.e. (/var/www/html/database/database.sqlite) (suggested way) or provide complete mysql connection of your local machine you are running app on
