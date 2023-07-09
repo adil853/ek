@@ -9,7 +9,7 @@ class TimeValidator
 {
     public function validateTime($inputs): bool|\Illuminate\Support\MessageBag|null
     {
-        $validator = $this->validateInputNew($inputs);
+        $validator = $this->validateTimeInput($inputs);
         if ($validator->fails()) {
             return $validator->errors();
         }
@@ -25,7 +25,7 @@ class TimeValidator
         return null;
     }
 
-    function validateInputNew(array $data): \Illuminate\Validation\Validator
+    function validateTimeInput(array $data): \Illuminate\Validation\Validator
     {
         return \Illuminate\Support\Facades\Validator::make($data, [
             'start_time' => 'required|date_format:Y-m-d H:i:s',
